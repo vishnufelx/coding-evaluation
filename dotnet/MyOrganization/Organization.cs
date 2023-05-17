@@ -26,7 +26,31 @@ namespace MyOrganization
          */
         public Position? Hire(Name person, string title)
         {
-            //your code here
+            Position position = FindPosition(title, root);
+            if (position == null || position.IsFilled())
+            {
+                return null;
+            }
+            position.SetEmployee(new Employee(person));
+            return position;
+        }
+
+        private Position FindPosition(string title, Position node)
+        {
+            Queue<Position> queue = new Queue<Position>();
+            queue.Enqueue(node);
+            while (queue.Count > 0)
+            {
+                Position current = queue.Dequeue();
+                if (current.GetTitle() == title)
+                {
+                    return current;
+                }
+                foreach (Position directReport in current.GetDirectReports())
+                {
+                    queue.Enqueue(directReport);
+                }
+            }
             return null;
         }
 
